@@ -1,0 +1,219 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Customizable Apps Page</title>
+<style>
+    .grid-container {
+      width: 80%;
+      margin-top: 20px;
+    }
+    .apps-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(100px, 1fr));
+      gap: 10px;
+    }
+    
+    /* Style for each app shortcut */
+    .app-shortcut {
+      position: relative;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      border-radius: 15px;
+      overflow: hidden;
+      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+      background-color: white;
+    }
+    
+    /* Style for the app images */
+    .app-shortcut img {
+      width:64px;
+      height:64px;
+    }
+    
+    /* Style for the pin/unpin buttons */
+    .pin-button {
+      position: absolute;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      margin: 10px;
+      border: none;
+      border-radius: 5px;
+      padding: 5px 10px;
+      cursor: pointer;
+      background-color: #f4f4f4;
+      font-size: 0.8em;
+    }
+    
+    /* Style for the form inputs and button */
+    #newAppForm input, #newAppForm button {
+      padding: 10px;
+      margin: 5px 0;
+      border: 1px solid #ccc;
+      border-radius: 5px;
+    }
+    
+    /* Clear the form on success */
+    .clear-input {
+      clear: both;
+      display: block;
+      padding: 1px;
+      margin: 5px;
+      border: none;
+      background: none;
+    }
+    
+</style>
+</head>
+<body>
+    <script src="uv/uv.bundle.js"></script>
+    <script src="uv/uv.config.js"></script>
+<!-- Form for adding new apps -->
+<form id="newAppForm"> <!-- Changed from a div to a form element -->
+    <input type="text" id="appName" placeholder="App Name" required>
+    <input type="url" id="appUrl" placeholder="App URL" required>
+    <input type="url" id="appImgUrl" placeholder="App Image URL" required>
+    <button type="submit">Add App Shortcut</button>
+    </form>
+
+<!-- Section for pinned and unpinned apps -->
+<div class="grid-container">
+<h2>Pinned Apps</h2>
+<div class="apps-grid" id="pinnedAppsGrid">
+<!-- Pinned app shortcuts will be placed here -->
+</div>
+
+<h2>Other Apps</h2>
+<div class="apps-grid" id="appsGrid">
+<!-- Unpinned app shortcuts will be placed here -->
+</div>
+</div>
+
+<script src="/static/scripts/register-sw.js" defer></script>
+<script type="text/javascript">
+    // Retrieve apps from localStorage or set to default if not present
+let apps = JSON.parse(localStorage.getItem('apps')) || [
+{ name: 'Github', url: 'https://github.com', imgUrl: '/static/images/icons/github.png', isPinned: false }
+
+// Add more predefined apps here
+];
+
+function saveAppData() {
+localStorage.setItem('apps', JSON.stringify(apps));
+}
+
+function addApp() {
+const name = document.getElementById('appName').value;
+const url = document.getElementById('appUrl').value;
+const imgUrl = document.getElementById('appImgUrl').value;
+
+if (name && url && imgUrl) {
+apps.push({ name, url, imgUrl, isPinned: false });
+renderApps();
+saveAppData(); // Save to localStorage after adding a new app
+clearForm(); // Clear the form fields after adding
+} else {
+alert('Please ensure all fields are filled in correctly.');
+}
+}
+
+function edu(value) {
+    let iframe = document.querySelector(".iframe.active");
+    window.navigator.serviceWorker
+      .register("/static/uv.js", {
+        scope: __uv$config.prefix,
+      })
+      .then(() => {
+        let url = value.trim();
+        if (!isUrl(url)) url = "https://www.google.com/search?q=" + url;
+        else if (!(url.startsWith("https://") || url.startsWith("http://")))
+          url = "https://" + url;
+        sessionStorage.setItem("encodedUrl", __uv$config.encodeUrl(url));
+        location.href = "edu.html";
+      });
+  }
+
+function renderApps() {
+    // Enlightening the console with the beginning of renderApps function
+    console.log('Commencing the rendering of apps...');
+  
+    // Retrieve the elements for pinned and unpinned apps
+    const pinnedAppsGrid = document.getElementById('pinnedAppsGrid');
+    const appsGrid = document.getElementById('appsGrid');
+  
+    // Clear the grids for the new rendering cycle
+    console.log('Clearing the canvas for the apps...');
+    pinnedAppsGrid.innerHTML = '';
+    appsGrid.innerHTML = '';
+  
+    // Sort apps array first by pinned status, then by name
+    console.log('Organizing the apps by pin status and name...');
+    apps.sort((a, b) => {
+      // Pinned apps float to the top
+      if (a.isPinned && !b.isPinned) return -1;
+      if (!a.isPinned && b.isPinned) return 1;
+      // For apps with the same pin status, alphabetical order shall prevail
+      return a.name.localeCompare(b.name);
+    });
+  
+    // Log the outcome of the sorting
+    console.log('Apps have been sorted:', apps);
+  
+    // Now we populate the grids with each app
+    console.log('Populating the realms with apps...');
+    apps.forEach((app, index) => {
+      // Crafting the element for each app
+      const appElement = getAppElement(app, index);
+  
+      // Determining the realm of the app, whether pinned or not
+      if (app.isPinned) {
+        console.log(`Pinning ${app.name} to the top...`);
+        pinnedAppsGrid.appendChild(appElement);
+      } else {
+        console.log(`Adding ${app.name} to the common grounds...`);
+        appsGrid.appendChild(appElement);
+      }
+    });
+  
+    // Concluding the rendering function with a log
+    console.log('All apps have been rendered successfully.');
+  }
+
+function getAppElement(app, index) {
+const appShortcut = document.createElement('div');
+appShortcut.className = 'app-shortcut';
+appShortcut.onclick = edu('${app.url}');
+appShortcut.innerHTML = `
+<img src="${app.imgUrl}" alt="${app.name}">
+<button class="pin-button" onclick="togglePin(${index})">${app.isPinned ? 'Unpin' : 'Pin'}</button>
+`;
+return appShortcut;
+}
+
+function togglePin(index) {
+apps[index].isPinned = !apps[index].isPinned;
+renderApps();
+saveAppData(); // Save to localStorage after toggling the pinned state
+}
+
+function clearForm() {
+document.getElementById('appName').value = '';
+document.getElementById('appUrl').value = '';
+document.getElementById('appImgUrl').value = '';
+}
+
+// Bind the add app function to the form submission
+document.getElementById('newAppForm').onsubmit = function(event) {
+event.preventDefault();
+addApp();
+};
+
+// Render apps on window load
+window.onload = renderApps;
+</script>
+
+</body>
+</html>

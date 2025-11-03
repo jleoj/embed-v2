@@ -1,0 +1,216 @@
+<html lang="en">
+  <head>
+      <link rel="shortcut icon" id="dynamic-favicon" href="../favicon.ico"/>
+    <title id="dynamic-title">Night</title>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <!--- Style --->
+    <style>
+      body {
+        margin: 0;
+      }
+
+      iframe {
+        display: block;
+        background: #000;
+        border: none;
+        height: 100vh;
+        width: 100vw;
+      }
+      .home {
+        border-radius: 30%;
+	margin-left: 1px;
+	margin-right: 1px;
+        width:50px;
+        height:50px;
+        background-color: #212121;
+        border:none;
+      }
+      .reload {
+        border-radius: 30%;
+	margin-left: 1px;
+	margin-right: 1px;
+        width:50px;
+        height:50px;
+        background-color: #212121;
+        border:none;
+      }
+      .back {
+        border-radius: 30%;
+	margin-left: 1px;
+	margin-right: 1px;
+        width:50px;
+        height:50px;
+        background-color: #212121;
+        border:none;
+      }
+
+      .forward {
+        border-radius: 30%;
+	margin-left: 1px;
+	margin-right: 1px;
+        width:50px;
+        height:50px;
+        background-color: #212121;
+        border:none;
+      }
+
+      #saveBookmarkButton {
+        border-radius: 30%;
+	margin-left: 1px;
+	margin-right: 1px;
+        width:50px;
+        height:50px;
+        background-color: #212121;
+        border:none;
+      }
+      
+      i {
+        color: white;
+      }
+	form {
+	margin-left: 1px;
+	margin-right: 1px;
+	top: 10px;
+    	position: relative;
+	}
+	    
+      .form__input {
+        border: none;
+        border-radius: 30px;
+        font-size: 16px;
+        width: 100px;
+        box-shadow: 0 0 5px rgba(196, 196, 196, 0.3);
+        background-color: #212121;
+        text-align: center;
+        color: #808080;
+        cursor:cell;
+      }
+      
+        .input {
+	padding: 20px;
+	width: 550px;
+        border-radius: 30px;
+        background:  #212121;
+	text-align: center;
+	border: none;
+	outline: none;
+	color: white;
+        }
+
+      .menubtn {
+        border-radius: 30%;
+	margin-left: 1px;
+	margin-right: 1px;
+        width:50px;
+        height:50px;
+        background-color: #212121;
+        border:none;
+      }
+
+      .sidebar {
+  height: 70%;
+  width: 15%;
+  border-radius:30px;
+  position: fixed;
+  z-index: 1;
+  top: 0;
+  right: 0;
+  background-color: #212121;
+  overflow-x: hidden;
+  transition: 0.5s;
+  padding-top: 5px;
+  padding-right: 5px;
+  visibility: hidden;
+}
+
+.sidebar a, .dropdown-btn {
+  text-decoration: none;
+  text-align:center;
+  font-size: 16px;
+  border: none;
+  background: none;
+  color: #818181;
+  display: block;
+  transition: 0.3s;
+}
+.dropdown-btn {
+  margin-left: 15px;
+}
+
+.sidebar a:hover .dropdown-btn:hover {
+  color: #f1f1f1;
+}
+
+#main {
+  transition: margin-left .5s;
+  padding: 16px;
+}
+
+.dropdown-container {
+  display: none;
+  background-color: #262626;
+  padding-left: 8px;
+}
+
+/* Optional: Style the caret down icon */
+.fa-caret-down {
+  float: right;
+  padding-right: 8px;
+}
+
+.favicon {
+  height:16px;
+  width: 16px;
+}
+
+.sidebar img {
+  height:16px;
+  width:16px;
+  
+}
+
+    </style>
+  </head>
+  <body>
+    <script src="uv/uv.bundle.js"></script>
+    <script src="uv/uv.config.js"></script>
+    <iframe src="" id="iframeId" style="bottom: 0" style="border: 0px #ffffff none" name="Iframe" scrolling="yes" frameborder="0" marginheight="0px" marginwidth="0px" height="100%" width="100%" allowfullscreen></iframe>
+    <div style="position:absolute;left:0;top:10px;height:50px;" id="browser">
+    <div style="display:flex;align-items:center;height:50px;">
+    <button id="home-page" class="home" onclick="window.location.href = './';"> <i class="fa-solid fa-house"></i> </button>
+    <form id="uv-form">
+    <input id="uv-search-engine" class="input" value="https://www.google.com/search?q=%s" type="hidden"/> 
+    <input id="uv-address" type="text" class="input" placeholder="Search Google or type an URL" class="form__input"/>
+    </form>
+    <button onclick="reload()" class="reload"> <i class="fa-solid fa-rotate-right"></i> </button>
+    <button onclick="back()" class="back"> <i class="fa-solid fa-backward"></i> </button>
+    <button onclick="forward()" class="forward"> <i class="fa-solid fa-forward"></i> </button>
+    <button id="saveBookmarkButton"> <i class="fa-solid fa-star"></i> </button>
+    </div>
+    </div>
+    <div style="position:fixed;top:10px;right:10px;">
+      <button onclick="togglemenu();" class="menubtn"><i class="fa-solid fa-bars"></i></button>
+    </div>
+    <div id="mySidebar" class="sidebar">
+      <a style="text-align:right;font-size:13px;top:5px;right:5px;" onclick="togglemenu();"><i class="fa-solid fa-x"></i></a>
+      <br>
+      <a style="text-align:center;font-size:16px;" onclick="hide();">Toggle Topbar</a>
+      <button class="dropdown-btn">Bookmarks 
+        <i class="fa fa-caret-down"></i>
+      </button>
+      <div class="dropdown-container">
+        <a onclick="localStorage.removeItem('bookmarks');initializeBookmarks();displayBookmarks();">Clear Bookmarks</a>
+        <div id="bookmarkList">
+
+        </div>
+      </div>
+      <a style="text-align:center;font-size:16px;"href="#">Clients</a>
+      <a style="text-align:center;font-size:16px;"href="#">Inspect</a>
+    </div>
+
+    <script src="/static/scripts/edu.js" defer></script>
+    <script src="/static/scripts/register-sw.js"></script>
+    <script src="/static/scripts/search.js"></script>
+    <script src="/static/scripts/index.js"></script>
+  </body>
+</html>
