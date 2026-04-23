@@ -1,24 +1,19 @@
-## Website Embedder v 0.1.6 β
+## Website Embedder Pre-release (PROOF OF CONCEPT ONLY!!)
 
-Is capable of embedding websites.
-However lots of websites have the X-Frame-Options HTTP header, making it unembeddable and resulting in an error.
+It all started with the dumbest Proof-of-Concept ever and somehow Securly is dumb enough to not be able to block it.
+Title says it all, embeds a given URL within an <iframe> and displays it. Comes with a fullscreen button, and cloaking too!
+
+There is a panic key, you have to configure it though.
 
 Here are some confirmed working websites:
     https://xc.com/
-    https://duck.theducklair.com/
-    https://yohoho.io/ /* Use at your own risk, may be blocked from exodragon.com */
-    https://rumblerush.io/ /* Not tested on school devices */
+    https://krunker.io
+    *Basically all the io games work*
 
-Add more when you find them!
+**reason why not all websites work**
+Most websites have a HTTP header called X-Frame-Options, and if they set it to `DENY`, then we can't embed it inside of iframes.
 
+Tested only on Securly for Chromebook MV3 devices. If you confirm this to work on any other blocker, like GoGuardian, Blocksi, etc. please create a PR confirming it with a screenshot/recording.
 
-**Changelog**
-
-v 0.1.1: First alpha release!
-v 0.1.2: Added Canvas icon + Dashboard tab title 
-v 0.1.3: Refactor favicon to match SJUSD icon for Canvas (size still needs edits, submit PR!)
-v 0.1.4a: Added CSP for extra protection against malicious scripts (CI: failing)
-v 0.1.4b [rollback]: CI failed, rollback to v0.1.3 beta (will pull Canvas icon by Saturday, Nov 15)
-v 0.1.5: Added tab cloaking features! Massive update bounty expired.
-v 0.1.6: Changed tab title and favicon since default cloaking is no longer required.
+ABSOLUTELY NO WARRANTY is provided for this, it is only a proof after all, do not create issues spamming with errors. I am aware that the buttons do not work in fullscreen mode (when you press the 5th key left on the Fn top bar on a Chromebook), I might fix it later.
 
