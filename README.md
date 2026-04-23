@@ -3,7 +3,7 @@
 It all started with the dumbest Proof-of-Concept ever and somehow Securly is dumb enough to not be able to block it.
 Title says it all, embeds a given URL within an <iframe> and displays it. Comes with a fullscreen button, and cloaking too!
 
-There is a panic key, you have to configure it though.
+There is a panic key, you have to configure it though. Check the code and replace `https://example.com` with whatever you want to redirect it to. Pressing Ctrl+Shift will trigger the redirect, you can change this as well with keys like `meta` and `alt`
 
 Here are some confirmed working websites:
     https://xc.com/
