@@ -68,21 +68,20 @@
     }
   </style>
    <script>
-    const panicRedirect = "https://sjusd.instructure.com"; // Change this to your safe site
+    const panicRedirect = "https://example.com"; // change this to your redirect site
 
     document.addEventListener("keydown", function (event) {
       // Trigger when both Ctrl and Shift are pressed
-      if (event.ctrlKey && event.shiftKey && !event.altKey && !event.metaKey) {
+      if (event.ctrlKey && event.shiftKey) {
         window.location.replace(panicRedirect);
       }
     });
   </script>
-  <script src="https://cdn.jsdelivr.net/npm/eruda"></script>
 </head>
 <body>
   <h1>Website Embedder</h1>
   <div id="controls">
-    <input type="text" id="urlInput" placeholder="Enter website URL (e.g. https://example.com)">
+    <input type="text" id="urlInput" placeholder="Enter website URL (e.g. https://xc.com)">
     <button onclick="loadWebsite()">Load</button>
     <button onclick="goFullscreen()">Fullscreen</button>
   </div>
@@ -112,27 +111,6 @@
       frame.style.display = "block";
       errorMsg.textContent = "Loading...";
 
-      // Detect if loading fails (due to X-Frame-Options)
-      frame.onload = () => {
-        errorMsg.textContent = "";
-      };
-
-      frame.onerror = () => {
-        errorMsg.textContent =
-          "This site cannot be embedded (blocked by the website itself). Try another URL.";
-        frame.style.display = "none";
-      };
-
-      // Fallback if the site blocks iframe embedding
-      setTimeout(() => {
-        if (frame.contentWindow === null) {
-          errorMsg.textContent =
-            "This site cannot be embedded (blocked by the website itself). Try another URL.";
-          frame.style.display = "none";
-        }
-      }, 2000);
-    }
-
     function goFullscreen() {
       const frame = document.getElementById("embedFrame");
       if (frame.requestFullscreen) {
@@ -150,26 +128,11 @@
   <button id="cloakDrive">Cloak as Drive</button>
   <button id="cloakCanvas">Cloak as Canvas</button>
   <button id="resetCloak">Reset Cloak</button>
-  <button id="toggleDevtools">DevTools</button>
 </div>
 
-<script>
-let erudaEnabled = false;
-
-document.getElementById("toggleDevtools").addEventListener("click", () => {
-    if (!erudaEnabled) {
-        eruda.init();
-        eruda.show();
-        erudaEnabled = true;
-    } else {
-        eruda.destroy();
-        erudaEnabled = false;
-    }
-});
-</script>
 
 <script>
-  // --- TAB CLOAKER FEATURE ---
+  // tab cloaks
 
   const cloaks = {
     "google": {
